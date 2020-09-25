@@ -51,7 +51,7 @@ class FNN(Map):
         print("Building feed-forward neural network...")
         self.x = tf.placeholder(config.real(tf), [None, self.layer_size[0]])
 
-        y = self.x
+        y = self.x[:, :2]
         if self._input_transform is not None:
             y = self._input_transform(y)
         for i in range(len(self.layer_size) - 2):

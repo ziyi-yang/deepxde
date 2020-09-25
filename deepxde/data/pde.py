@@ -129,12 +129,23 @@ class PDE(Data):
             X = np.vstack((tmp, X))
         if self.anchors is not None:
             X = np.vstack((self.anchors, X))
+        num_examples = X.shape[0]
+        idx = np.random.randint(3, size=num_examples)
+        one_hot = np.zeros((num_examples, 3))
+        one_hot[np.arange(num_examples), idx] = 1
+        X = np.concatenate([X, one_hot], axis = 1)
         return X
 
     def bc_points(self):
         x_bcs = [bc.collocation_points(self.train_x) for bc in self.bcs]
         self.num_bcs = list(map(len, x_bcs))
-        return np.vstack(x_bcs)
+        X = np.vstack(x_bcs)
+        num_examples = X.shape[0]
+        idx = np.random.randint(3, size=num_examples)
+        one_hot = np.zeros((num_examples, 3))
+        one_hot[np.arange(num_examples), idx] = 1
+        X = np.concatenate([X, one_hot], axis = 1)
+
 
     def test_points(self):
         return self.geom.uniform_points(self.num_test, True)
@@ -198,7 +209,17 @@ class TimePDE(PDE):
             X = np.vstack((tmp, X))
         if self.anchors is not None:
             X = np.vstack((self.anchors, X))
+        num_examples = X.shape[0]
+        idx = np.random.randint(3, size=num_examples)
+        one_hot = np.zeros((num_examples, 3))
+        one_hot[np.arange(num_examples), idx] = 1
+        X = np.concatenate([X, one_hot], axis = 1)
         return X
 
     def test_points(self):
-        return self.geom.uniform_points(self.num_test)
+        X = self.geom.uniform_points(self.num_test)
+        one_hot = np.zeros((self.num_test, 3))
+        idx = np.random.randint(3, size=self.num_test)
+        one_hot[np.arange(num_examples), idx] = 1
+        X = np.concatenate([X, one_hot], axis = 1)
+        return X
